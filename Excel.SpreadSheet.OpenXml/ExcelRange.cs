@@ -79,7 +79,7 @@ namespace Excel.SpreadSheet.OpenXml
             {
                 newCell.CellValue = new CellValue(text);
                 newCell.DataType = new EnumValue<CellValues>(CellValues.String);
-                newCell.StyleIndex = 4;
+                newCell.StyleIndex = 4U;
             }
 
             worksheet.Save();

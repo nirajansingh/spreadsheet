@@ -66,10 +66,10 @@ namespace Excel.SpreadSheet.OpenXml
 
             // Create "fills" node.
             var fills = new Fills();
-            fills.AddChild(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.None } });
-            fills.AddChild(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.Gray125 } });
-            fills.AddChild(new Fill { PatternFill = new PatternFill { BackgroundColor = new BackgroundColor { Rgb = new HexBinaryValue { Value = "FFFFFF00" } } } });
-            fills.AddChild(new Fill { PatternFill = new PatternFill { BackgroundColor = new BackgroundColor { Rgb = new HexBinaryValue { Value = "8EA9DB" } } } });
+            fills.Append(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.None } });
+            fills.Append(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.Gray125 } });
+            fills.Append(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.Solid, BackgroundColor = new BackgroundColor { Rgb = new HexBinaryValue { Value = "#2E9D00" } } } });
+            fills.Append(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.Solid, BackgroundColor = new BackgroundColor { Rgb = new HexBinaryValue { Value = "#2E9DFF" } } } });
 
             fills.Count = (uint)fills.ChildElements.Count;
 
@@ -134,16 +134,15 @@ namespace Excel.SpreadSheet.OpenXml
                 ApplyNumberFormat = true
             });
             //StyleIndex = 3
-            cellFormats.Append(new CellFormat { Alignment = new Alignment { Horizontal = HorizontalAlignmentValues.Center, Vertical = VerticalAlignmentValues.Top } });
+            cellFormats.Append(new CellFormat { Alignment = new Alignment { Horizontal = new EnumValue<HorizontalAlignmentValues>(HorizontalAlignmentValues.Center), Vertical = new EnumValue<VerticalAlignmentValues>(VerticalAlignmentValues.Top) } });
             //StyleIndex = 4
-            cellFormats.Append(new CellFormat
+            cellFormats.Append(new CellFormat()
             {
                 BorderId = 0,
-                FillId = 3,
-                FontId = 1,
-                ApplyFont = true,
+                FillId = 2U,
+                FontId = 0,
                 ApplyFill = true,
-                ApplyBorder = true
+                ApplyBorder = true,
             });
 
             cellFormats.Count = (uint)cellFormats.ChildElements.Count;

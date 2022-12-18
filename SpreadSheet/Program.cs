@@ -14,6 +14,7 @@ sheet2.Rename("Data");
 
 sheet1.Range("A1", "F1").Merge();
 sheet1.Cells(1, "A").Value("Hello Excel!");
+sheet1.Cells(2, "A").Value("Test");
 
 app.SaveAndClose();
 
