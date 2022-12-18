@@ -1,118 +1,120 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System;
+using System.Linq;
 
-namespace Excel.SpreadSheet.OpenXml;
-
-public sealed class ExcelRange
+namespace Excel.SpreadSheet.OpenXml
 {
-    private readonly Worksheet worksheet;
-    private readonly string cell1;
-    private readonly string cell2;
-
-    internal ExcelRange(Worksheet worksheet, string cell1, string cell2)
+    public sealed class ExcelRange
     {
-        this.worksheet = worksheet;
-        this.cell1 = cell1;
-        this.cell2 = cell2;
-        Style = new ExcelStyle();
-    }
+        private readonly Worksheet worksheet;
+        private readonly string cell1;
+        private readonly string cell2;
 
-    public ExcelStyle Style { get; set; }
-
-    public int RowHeight { get; set; }
-
-    public int ColumnWidth { get; set; }
-
-    public void Merge()
-    {
-        MergeCells mergeCells;
-        if (worksheet.Elements<MergeCells>().Count() > 0)
+        internal ExcelRange(Worksheet worksheet, string cell1, string cell2)
         {
-            mergeCells = worksheet.Elements<MergeCells>().First();
-        }
-        else
-        {
-            mergeCells = new MergeCells();
-            worksheet.InsertAfter(mergeCells, worksheet.Elements<SheetData>().First());
+            this.worksheet = worksheet;
+            this.cell1 = cell1;
+            this.cell2 = cell2;
+            Style = new ExcelStyle();
         }
 
-        var mergeCell = new MergeCell { Reference = new StringValue(ToString()) };
-        mergeCells.Append(mergeCell);
+        public ExcelStyle Style { get; set; }
 
-        worksheet.Save();
-    }
+        public int RowHeight { get; set; }
 
-    public ExcelRange Value(string text)
-    {
-        string cellReference = cell2 + cell1;
-        var sheetData = worksheet.GetFirstChild<SheetData>();
-        if (sheetData == null) return this;
+        public int ColumnWidth { get; set; }
 
-        Row? row = sheetData.Elements<Row>().Where(r => r.RowIndex == cell1).FirstOrDefault();
-        if (row == null)
+        public void Merge()
         {
-            row = new Row() { RowIndex = Convert.ToUInt32(cell1) };
-            sheetData.Append(row);
-        }
-       
-        Cell? newCell = row.Elements<Cell>().Where(c => c.CellReference?.Value == cellReference).FirstOrDefault();
-        if (newCell == null)
-        {
-            Cell? refCell = null;
-            foreach (Cell cell in row.Elements<Cell>())
+            MergeCells mergeCells;
+            if (worksheet.Elements<MergeCells>().Count() > 0)
             {
-                if (string.Compare(cell.CellReference?.Value, cellReference, true) > 0)
-                {
-                    refCell = cell;
-                    break;
-                }
+                mergeCells = worksheet.Elements<MergeCells>().First();
+            }
+            else
+            {
+                mergeCells = new MergeCells();
+                worksheet.InsertAfter(mergeCells, worksheet.Elements<SheetData>().First());
             }
 
-            newCell = new Cell() { CellReference = cellReference };
-            row.InsertBefore(newCell, refCell);
-        }
-        
-        if (newCell != null)
-        {
-            newCell.CellValue = new CellValue(text);
-            newCell.DataType = new EnumValue<CellValues>(CellValues.String);
-            newCell.StyleIndex = 4;
+            var mergeCell = new MergeCell { Reference = new StringValue(ToString()) };
+            mergeCells.Append(mergeCell);
+
+            worksheet.Save();
         }
 
-        worksheet.Save();
-
-        return this;
-    }
-
-    private void GetCellStyle()
-    {
-        var spreadSheet = worksheet?.WorksheetPart?.OpenXmlPackage as SpreadsheetDocument;
-        if(spreadSheet != null)
+        public ExcelRange Value(string text)
         {
-            var stylesPart = spreadSheet?.WorkbookPart?.GetPartsOfType<WorkbookStylesPart>() as WorkbookStylesPart;
-            if(stylesPart != null)
+            string cellReference = cell2 + cell1;
+            var sheetData = worksheet.GetFirstChild<SheetData>();
+            if (sheetData == null) return this;
+
+            Row? row = sheetData.Elements<Row>().Where(r => r.RowIndex == cell1).FirstOrDefault();
+            if (row == null)
             {
-                var fills = stylesPart.Stylesheet.Elements<Fills>().First();
-                if(fills != null)
-                {
-                    foreach (Fill fill in fills.Elements<Fill>())
-                    {
-                        if (fill.PatternFill?.BackgroundColor?.Rgb?.Value == Style.BackgroundColor)
-                        {
+                row = new Row() { RowIndex = Convert.ToUInt32(cell1) };
+                sheetData.Append(row);
+            }
 
+            Cell? newCell = row.Elements<Cell>().Where(c => c.CellReference?.Value == cellReference).FirstOrDefault();
+            if (newCell == null)
+            {
+                Cell? refCell = null;
+                foreach (Cell cell in row.Elements<Cell>())
+                {
+                    if (string.Compare(cell.CellReference?.Value, cellReference, true) > 0)
+                    {
+                        refCell = cell;
+                        break;
+                    }
+                }
+
+                newCell = new Cell() { CellReference = cellReference };
+                row.InsertBefore(newCell, refCell);
+            }
+
+            if (newCell != null)
+            {
+                newCell.CellValue = new CellValue(text);
+                newCell.DataType = new EnumValue<CellValues>(CellValues.String);
+                newCell.StyleIndex = 4;
+            }
+
+            worksheet.Save();
+
+            return this;
+        }
+
+        private void GetCellStyle()
+        {
+            var spreadSheet = worksheet?.WorksheetPart?.OpenXmlPackage as SpreadsheetDocument;
+            if (spreadSheet != null)
+            {
+                var stylesPart = spreadSheet?.WorkbookPart?.GetPartsOfType<WorkbookStylesPart>() as WorkbookStylesPart;
+                if (stylesPart != null)
+                {
+                    var fills = stylesPart.Stylesheet.Elements<Fills>().First();
+                    if (fills != null)
+                    {
+                        foreach (Fill fill in fills.Elements<Fill>())
+                        {
+                            if (fill.PatternFill?.BackgroundColor?.Rgb?.Value == Style.BackgroundColor)
+                            {
+
+                            }
                         }
                     }
                 }
+
             }
 
         }
 
-    }
-
-    public override string ToString()
-    {
-        return $"{cell1}:{cell2}";
+        public override string ToString()
+        {
+            return $"{cell1}:{cell2}";
+        }
     }
 }
-

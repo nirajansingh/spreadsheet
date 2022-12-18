@@ -3,47 +3,47 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace Excel.SpreadSheet.OpenXml;
-
-public class ExcelApplication: IDisposable
+namespace Excel.SpreadSheet.OpenXml
 {
-    private SpreadsheetDocument spreadsheet;
-    private WorkbookPart workbookpart;
-    private ExcelWorkbook? workbook;
-
-    public ExcelApplication(string fileName = "New Excel.xlsx")
+    public class ExcelApplication : IDisposable
     {
-        spreadsheet = SpreadsheetDocument.Create(fileName, SpreadsheetDocumentType.Workbook);
-        workbookpart = spreadsheet.AddWorkbookPart();
-    }
+        private SpreadsheetDocument spreadsheet;
+        private WorkbookPart workbookpart;
+        private ExcelWorkbook? workbook;
 
-    public ExcelWorkbook? Workbook { get => workbook; }
+        public ExcelApplication(string fileName = "New Excel.xlsx")
+        {
+            spreadsheet = SpreadsheetDocument.Create(fileName, SpreadsheetDocumentType.Workbook);
+            workbookpart = spreadsheet.AddWorkbookPart();
+        }
 
-    public ExcelWorkbook AddWorkbook()
-    {
-        workbookpart.Workbook = new Workbook();
-        return workbook = new ExcelWorkbook(workbookpart);
-    }
+        public ExcelWorkbook? Workbook { get => workbook; }
 
-    public void Save()
-    {
-        spreadsheet.Save();
-    }
+        public ExcelWorkbook AddWorkbook()
+        {
+            workbookpart.Workbook = new Workbook();
+            return workbook = new ExcelWorkbook(workbookpart);
+        }
 
-    public void Close()
-    {
-        spreadsheet.Close();
-    }
+        public void Save()
+        {
+            spreadsheet.Save();
+        }
 
-    public void SaveAndClose()
-    {
-        Save();
-        Close();
-    }
+        public void Close()
+        {
+            spreadsheet.Close();
+        }
 
-    public void Dispose()
-    {
-        SaveAndClose();
+        public void SaveAndClose()
+        {
+            Save();
+            Close();
+        }
+
+        public void Dispose()
+        {
+            SaveAndClose();
+        }
     }
 }
-

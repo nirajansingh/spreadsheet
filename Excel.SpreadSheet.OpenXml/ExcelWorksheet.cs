@@ -1,69 +1,70 @@
 ﻿using System;
+using System.Collections.Generic;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace Excel.SpreadSheet.OpenXml;
-
-public class ExcelWorksheet
+namespace Excel.SpreadSheet.OpenXml
 {
-    private readonly WorksheetPart worksheetPart;
-    private readonly Sheet sheet;
-    private readonly List<ExcelRange> ranges;
-
-    internal ExcelWorksheet(WorksheetPart worksheetPart, Sheet sheet)
+    public class ExcelWorksheet
     {
-        this.worksheetPart = worksheetPart;
-        this.sheet = sheet;
-        ranges = new List<ExcelRange>();
-    }
+        private readonly WorksheetPart worksheetPart;
+        private readonly Sheet sheet;
+        private readonly List<ExcelRange> ranges;
 
-    public void Rename(string sheetName)
-    {
-        sheet.Name = sheetName;
-    }
-
-    public ExcelRange Range(string cell1, string cell2)
-    {
-        return new ExcelRange(worksheetPart.Worksheet, cell1, cell2);
-    }
-
-    public ExcelRange Columns(string columnName)
-    {
-        if (string.IsNullOrWhiteSpace(columnName))
+        internal ExcelWorksheet(WorksheetPart worksheetPart, Sheet sheet)
         {
-            throw new ArgumentException(nameof(columnName));
+            this.worksheetPart = worksheetPart;
+            this.sheet = sheet;
+            ranges = new List<ExcelRange>();
         }
 
-        string[] cells = new string[2];
-        if (columnName.Contains(':'))
+        public void Rename(string sheetName)
         {
-            cells = columnName.Split(':');
-        }
-        else
-        {
-            cells[0] = columnName;
-            cells[1] = columnName;
+            sheet.Name = sheetName;
         }
 
-        return new ExcelRange(worksheetPart.Worksheet, cells[0], cells[1]);
-    }
+        public ExcelRange Range(string cell1, string cell2)
+        {
+            return new ExcelRange(worksheetPart.Worksheet, cell1, cell2);
+        }
 
-    public ExcelRange Cells(int rowIndex, string columnIndex)
-    {
-        return new ExcelRange(worksheetPart.Worksheet, Convert.ToString(rowIndex), columnIndex);
-    }
+        public ExcelRange Columns(string columnName)
+        {
+            if (string.IsNullOrWhiteSpace(columnName))
+            {
+                throw new ArgumentException(nameof(columnName));
+            }
 
-    public void AddImage(string imageFileName)
-    {
-        DrawingsPart drawingsPart = worksheetPart.AddNewPart<DrawingsPart>();
-        worksheetPart.Worksheet.Append(new DocumentFormat.OpenXml.Spreadsheet.Drawing()
-        { Id = worksheetPart.GetIdOfPart(drawingsPart) });
+            string[] cells = new string[2];
+            if (columnName.Contains(':'))
+            {
+                cells = columnName.Split(':');
+            }
+            else
+            {
+                cells[0] = columnName;
+                cells[1] = columnName;
+            }
 
-        
-        var imagePart = worksheetPart.AddImagePart(ImagePartType.Bmp);
+            return new ExcelRange(worksheetPart.Worksheet, cells[0], cells[1]);
+        }
 
-        
-        worksheetPart.Worksheet.Save();
+        public ExcelRange Cells(int rowIndex, string columnIndex)
+        {
+            return new ExcelRange(worksheetPart.Worksheet, Convert.ToString(rowIndex), columnIndex);
+        }
+
+        public void AddImage(string imageFileName)
+        {
+            DrawingsPart drawingsPart = worksheetPart.AddNewPart<DrawingsPart>();
+            worksheetPart.Worksheet.Append(new DocumentFormat.OpenXml.Spreadsheet.Drawing()
+            { Id = worksheetPart.GetIdOfPart(drawingsPart) });
+
+
+            var imagePart = worksheetPart.AddImagePart(ImagePartType.Bmp);
+
+
+            worksheetPart.Worksheet.Save();
+        }
     }
 }
-
