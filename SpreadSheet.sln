@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1704.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadSheet.Console", "SpreadSheet\SpreadSheet.Console.csproj", "{160643AB-4794-4FE9-87EC-1BAF8742D971}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Excel.SpreadSheet.OpenXml", "Excel.SpreadSheet.OpenXml\Excel.SpreadSheet.OpenXml.csproj", "{EC6758FD-227D-4067-A525-338412318DF0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{160643AB-4794-4FE9-87EC-1BAF8742D971}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{160643AB-4794-4FE9-87EC-1BAF8742D971}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{160643AB-4794-4FE9-87EC-1BAF8742D971}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{160643AB-4794-4FE9-87EC-1BAF8742D971}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC6758FD-227D-4067-A525-338412318DF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC6758FD-227D-4067-A525-338412318DF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC6758FD-227D-4067-A525-338412318DF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC6758FD-227D-4067-A525-338412318DF0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {994F8346-54FC-4E23-92B8-B8C3C0ACF609}
+	EndGlobalSection
+EndGlobal
