@@ -2,11 +2,25 @@
 
 namespace Excel.SpreadSheet.OpenXml;
 
-public class ExcelStyle
+public struct ExcelStyle
 {
-	public string Font { get; set; } = "";
-	public int FontSize { get; set; }
-	public string FontColor { get; set; } = "";
-	public int FontWeight { get; set; }
+    public ExcelStyle()
+    {
+        Font = new ExcelFont();
+        BackgroundColor = "";
+    }
+
+	public ExcelFont Font { get; set; }
+    public HorizontalAlignment HorizontalAlignment { get; set; }
+    public VerticalAlignment VerticalAlignment { get; set; }
+    public string BackgroundColor { get; set; }
+}
+
+public struct ExcelFont
+{
+    public string Family { get; set; }
+    public int Size { get; set; }
+    public string Color { get; set; }
+    public int Weight { get; set; }
 }
 

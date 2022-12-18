@@ -27,22 +27,22 @@ public class ExcelWorksheet
         return new ExcelRange(worksheetPart.Worksheet, cell1, cell2);
     }
 
-    public ExcelRange Columns(string columnIndex)
+    public ExcelRange Columns(string columnName)
     {
-        if (string.IsNullOrWhiteSpace(columnIndex))
+        if (string.IsNullOrWhiteSpace(columnName))
         {
-            throw new ArgumentException(nameof(columnIndex));
+            throw new ArgumentException(nameof(columnName));
         }
 
         string[] cells = new string[2];
-        if (columnIndex.Contains(':'))
+        if (columnName.Contains(':'))
         {
-            cells = columnIndex.Split(':');
+            cells = columnName.Split(':');
         }
         else
         {
-            cells[0] = columnIndex;
-            cells[1] = columnIndex;
+            cells[0] = columnName;
+            cells[1] = columnName;
         }
 
         return new ExcelRange(worksheetPart.Worksheet, cells[0], cells[1]);

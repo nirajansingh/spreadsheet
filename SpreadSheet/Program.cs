@@ -2,6 +2,7 @@
 
 var app = new ExcelApplication();
 var workbook = app.AddWorkbook();
+workbook.AddStyle();
 workbook.AddWorksheet();
 workbook.AddWorksheet();
 

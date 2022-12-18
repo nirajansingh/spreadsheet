@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Excel.SpreadSheet.OpenXml;
@@ -14,15 +15,14 @@ public sealed class ExcelRange
         this.worksheet = worksheet;
         this.cell1 = cell1;
         this.cell2 = cell2;
+        Style = new ExcelStyle();
     }
 
-    public ExcelStyle? Style { get; set; }
+    public ExcelStyle Style { get; set; }
 
     public int RowHeight { get; set; }
 
     public int ColumnWidth { get; set; }
-
-    public HorizontalAlignment HorizontalAlignment { get; set; }
 
     public void Merge()
     {
@@ -77,11 +77,37 @@ public sealed class ExcelRange
         {
             newCell.CellValue = new CellValue(text);
             newCell.DataType = new EnumValue<CellValues>(CellValues.String);
+            newCell.StyleIndex = 4;
         }
 
         worksheet.Save();
 
         return this;
+    }
+
+    private void GetCellStyle()
+    {
+        var spreadSheet = worksheet?.WorksheetPart?.OpenXmlPackage as SpreadsheetDocument;
+        if(spreadSheet != null)
+        {
+            var stylesPart = spreadSheet?.WorkbookPart?.GetPartsOfType<WorkbookStylesPart>() as WorkbookStylesPart;
+            if(stylesPart != null)
+            {
+                var fills = stylesPart.Stylesheet.Elements<Fills>().First();
+                if(fills != null)
+                {
+                    foreach (Fill fill in fills.Elements<Fill>())
+                    {
+                        if (fill.PatternFill?.BackgroundColor?.Rgb?.Value == Style.BackgroundColor)
+                        {
+
+                        }
+                    }
+                }
+            }
+
+        }
+
     }
 
     public override string ToString()
